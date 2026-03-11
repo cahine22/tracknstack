@@ -24,21 +24,29 @@ Ensuring data persistence and security as per the SYE rubric.
 
 *The Gamified Financial Dashboard (The "Home" Screen)*
 The primary interface where users visualize their financial health through a gaming lens.
-3. Savings Progress Bar: A prominent visual element at the top showing the percentage completion of a user-defined savings goal, which is updated every time the user logs any type of transaction or savings.
+3. Savings Progress Bar: A prominent visual element at the top showing the percentage completion of a user-defined savings goal.
+    - **Logic:** Transactions marked as "Savings" increase progress. Regular "Spending" (Needs/Wants) tracks against the budget but does not decrease the savings goal progress unless the user explicitly withdraws from savings.
 4. The "Character" Avatar: A graphic with the user's current level and XP earned through the challenges they complete, the logs/streaks they keep up, ect.
 5. Quick-Log Widget: A simplified entry point to add a transaction (Amount, Category, Date) without leaving the main screen.
-6. Summary Cards: Weekly/Monthly breakdowns showing "Budget vs. Actual" spending in specific categories. Can click on the card to get a more in depth look into their transaction history.
+    - **Budget Categories:** Every transaction must be assigned to one of: **Needs, Wants, Savings, or Others**.
+6. Summary Cards: Weekly/Monthly breakdowns showing "Budget vs. Actual" spending in the four categories. Can click on the card to get a more in depth look into their transaction history.
 
 *Dynamic Quest & Challenge System*
 The core engagement engine that converts financial tasks into "missions
-7. Daily Quests: Non-negotiable daily tasks, such as "Log/Review today's spending" that provide small XP boosts.
-8. Weekly "Boss" Challenges: High-stakes, opt-in challenges (e.g., "No-Buy Weekend" or "Save $50 extra this week").
+7. Daily Quests: Consistent daily tasks (e.g., "Log today's spending") that provide small XP boosts. These are the same every day for all users.
+8. Weekly "Boss" Challenges: High-stakes, opt-in challenges.
+    - **Logic:** Each week, 2 challenges are randomly pulled from a pool of ~10 (e.g., "No-Buy Weekend", "Save $50 extra").
 9. Streak Multiplier: A logic system that increases XP rewards for every consecutive day a user logs a transaction or completes a quest.
 
 *Progression & Reward Framework*
 The system that handles the leveling logic and user growth.
-10. Leveling Logic: Define XP thresholds for level-ups. XP is earned by completing quests, staying under budget, and logging data consistently
+10. Leveling Logic: Define XP thresholds for level-ups. XP is earned by completing quests, staying under budget, and logging data consistently.
 11. Unlockables: Upon reaching certain levels, users unlock UI customizations (like new icons for their avatar).
+
+*Onboarding Flow*
+12. Initial Setup: Immediately after Firebase Auth (Signup), the user is directed to a mandatory setup screen to:
+    - Set their Monthly Budget (distributed across Needs, Wants, Savings, Others).
+    - Set their primary Savings Goal (Target Amount and Name).
 
 
 
