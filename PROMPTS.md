@@ -8,3 +8,8 @@
 
 [x] 3. Update main.dart to initialize Firebase and apply this theme to the MaterialApp. Constraint Check: Do not write any feature logic yet. Only implement the dependencies and the theme as requested."
 
+
+*MVP SECTION*
+
+[x] 4. Flush out the placeholder login screen to be a full signup screen. Stick to the themes and make it feel mystical with icons and colors. under the log in screen, have a register link that goes to a screen where the user can sign up instead of log in. for now, its ok to have the register screen just be a placeholder screen. there should be email and password feilds, and then an option to sign up with google (even though thats not hooked up yet) 
+
