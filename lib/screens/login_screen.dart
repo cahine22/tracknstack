@@ -134,7 +134,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ElevatedButton(
                 onPressed: _isLoading ? null : _signInQuest,
                 child: _isLoading 
-                  ? const CircularProgressIndicator(color: Colors.black) 
+                  ? CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary) 
                   : const Text('Resume Quest'),
               ),
               const SizedBox(height: 20),

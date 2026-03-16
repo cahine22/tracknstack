@@ -92,9 +92,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               // --- Mystical Branding Section ---
               Center(
                 child: Icon(
-                  Icons.auto_awesome, // A mystical star icon
+                  Icons.vpn_key_rounded, // Updated to Key icon
                   size: 80,
-                  color: primaryColor, 
+                  color: primaryColor, // Same green as the buttons
                 ),
               ),
               const SizedBox(height: 24),
@@ -145,7 +145,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ElevatedButton(
                 onPressed: _isLoading ? null : _signUpQuest,
                 child: _isLoading 
-                  ? const CircularProgressIndicator(color: Colors.black) 
+                  ? CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary) 
                   : const Text('Begin Journey'),
               ),
               

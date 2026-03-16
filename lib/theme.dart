@@ -5,19 +5,28 @@ import 'package:flutter/material.dart';
 /// We use a custom ThemeData class to ensure that any new screen 
 /// we add automatically looks "gamified" and consistent.
 class AppTheme {
-  // --- Gamified Color Palette (Phase 1, Prompt 2) ---
+  // --- Gamified Color Palette (Updated: No Black, Brown Background) ---
+  
   // A vibrant, growth-inspired green as our primary focus.
   static const Color primaryColor = Color(0xFF00693E); 
-  // High-contrast dark surfaces for depth and focus.
-  static const Color secondaryColor = Color(0xFF121212); 
+  
+  // High-contrast dark brown surfaces for depth and focus.
+  static const Color secondaryColor = Color(0xFF2D241F); 
+  
   // Bright yellow for XP, rewards, and "win" states.
   static const Color accentColor = Color(0xFFFFD700); 
-  // A deep background helps the bright neon elements "pop".
-  static const Color backgroundColor = Color(0xFF0A0A0A); 
-  // Surface color for cards and secondary UI elements.
-  static const Color surfaceColor = Color(0xFF1E1E1E); 
+  
+  // Deep brown background instead of black.
+  static const Color backgroundColor = Color(0xFF1B1411); 
+  
+  // Surface color for cards and secondary UI elements (Warmer brown).
+  static const Color surfaceColor = Color(0xFF3E322B); 
+  
   // Used for alert states, budget deficits, or negative streaks.
   static const Color errorColor = Color(0xFFCF6679); 
+
+  // A very dark brown to replace absolute black in text/icons.
+  static const Color darkestBrown = Color(0xFF0E0A08);
   
   /// The global dark theme configuration for the application.
   static ThemeData get darkTheme {
@@ -27,9 +36,9 @@ class AppTheme {
       // Define the core color mapping for the entire Flutter engine.
       colorScheme: const ColorScheme.dark(
         primary: primaryColor,
-        onPrimary: Colors.black, // Dark text on light green primary.
+        onPrimary: darkestBrown, // Dark brown text on light green primary.
         secondary: accentColor,
-        onSecondary: Colors.black,
+        onSecondary: darkestBrown,
         surface: surfaceColor,
         onSurface: Colors.white,
         error: errorColor,
@@ -66,7 +75,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,
-          foregroundColor: Colors.black,
+          foregroundColor: darkestBrown,
           minimumSize: const Size(double.infinity, 56), // Large touch target.
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30), // Extra rounded "gaming" feel.
@@ -81,7 +90,6 @@ class AppTheme {
       ),
       
       // --- Custom TextTheme ---
-      // We bolden display/headline styles to evoke a strong gaming vibe.
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           fontSize: 32,
@@ -111,7 +119,6 @@ class AppTheme {
       ),
       
       // --- Input Decoration (Forms) ---
-      // Uniform look for all TextFields (Email/Password Login).
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: secondaryColor,
