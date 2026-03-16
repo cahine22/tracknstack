@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
 
+/// Central class for defining the 'Track N Stack' visual style.
+/// 
+/// We use a custom ThemeData class to ensure that any new screen 
+/// we add automatically looks "gamified" and consistent.
 class AppTheme {
-  // Gamified Color Palette - Prompt 2 Refinement
-  static const Color primaryColor = Color(0xFF50C878); // Emerald Green (Action/Growth)
-  static const Color secondaryColor = Color(0xFF1A1A1A); // High-Contrast Dark (Depth)
-  static const Color accentColor = Color(0xFFFFD700); // Gold (XP/Rewards)
-  static const Color backgroundColor = Color(0xFF0D0D0D); // Deep Black
-  static const Color surfaceColor = Color(0xFF1E1E1E); // Elevated Surface
-  static const Color errorColor = Color(0xFFCF6679); // Soft Red
+  // --- Gamified Color Palette (Phase 1, Prompt 2) ---
+  // A vibrant, growth-inspired green as our primary focus.
+  static const Color primaryColor = Color(0xFF00693E); 
+  // High-contrast dark surfaces for depth and focus.
+  static const Color secondaryColor = Color(0xFF121212); 
+  // Bright yellow for XP, rewards, and "win" states.
+  static const Color accentColor = Color(0xFFFFD700); 
+  // A deep background helps the bright neon elements "pop".
+  static const Color backgroundColor = Color(0xFF0A0A0A); 
+  // Surface color for cards and secondary UI elements.
+  static const Color surfaceColor = Color(0xFF1E1E1E); 
+  // Used for alert states, budget deficits, or negative streaks.
+  static const Color errorColor = Color(0xFFCF6679); 
   
+  /// The global dark theme configuration for the application.
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      // Define the core color mapping for the entire Flutter engine.
       colorScheme: const ColorScheme.dark(
         primary: primaryColor,
-        onPrimary: Colors.black,
+        onPrimary: Colors.black, // Dark text on light green primary.
         secondary: accentColor,
         onSecondary: Colors.black,
         surface: surfaceColor,
@@ -23,6 +35,10 @@ class AppTheme {
         error: errorColor,
       ),
       scaffoldBackgroundColor: backgroundColor,
+      
+      // --- Global Widget Styles ---
+      
+      // AppBars should be subtle, allowing the content to be the focus.
       appBarTheme: const AppBarTheme(
         backgroundColor: backgroundColor,
         elevation: 0,
@@ -34,22 +50,26 @@ class AppTheme {
           letterSpacing: 1.2,
         ),
       ),
+      
+      // Cards are used for "Summary Cards" (Milestone 1, Requirement 6).
       cardTheme: CardThemeData(
         color: surfaceColor,
         elevation: 8,
-        shadowColor: primaryColor.withOpacity(0.2),
+        shadowColor: primaryColor.withValues(alpha: 0.2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: primaryColor.withOpacity(0.1), width: 1),
+          side: BorderSide(color: primaryColor.withValues(alpha: 0.1), width: 1),
         ),
       ),
+      
+      // Custom styling for primary actions (Sign Up, Log Transaction).
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,
           foregroundColor: Colors.black,
-          minimumSize: const Size(double.infinity, 56),
+          minimumSize: const Size(double.infinity, 56), // Large touch target.
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30), // Extra rounded for gamified feel
+            borderRadius: BorderRadius.circular(30), // Extra rounded "gaming" feel.
           ),
           textStyle: const TextStyle(
             fontSize: 18,
@@ -59,6 +79,9 @@ class AppTheme {
           elevation: 4,
         ),
       ),
+      
+      // --- Custom TextTheme ---
+      // We bolden display/headline styles to evoke a strong gaming vibe.
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           fontSize: 32,
@@ -86,6 +109,9 @@ class AppTheme {
           fontSize: 14,
         ),
       ),
+      
+      // --- Input Decoration (Forms) ---
+      // Uniform look for all TextFields (Email/Password Login).
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: secondaryColor,
@@ -97,7 +123,7 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: primaryColor.withOpacity(0.3)),
+          borderSide: BorderSide(color: primaryColor.withValues(alpha: 0.3)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),

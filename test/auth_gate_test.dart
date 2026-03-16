@@ -36,7 +36,7 @@ void main() {
 
     // Verify that LoginScreen is shown
     expect(find.byType(LoginScreen), findsOneWidget);
-    expect(find.text('Welcome to Track N Stack!'), findsOneWidget);
+    expect(find.text('Unlock your financial mastery.'), findsOneWidget);
   });
 
   testWidgets('AuthGate shows DashboardScreen when authenticated', (WidgetTester tester) async {

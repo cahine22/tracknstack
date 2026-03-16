@@ -9,6 +9,8 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Join the Quest'),
@@ -17,10 +19,10 @@ class RegisterScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.auto_awesome, // Mystical star icon
               size: 80,
-              color: Color(0xFF50C878), // Emerald Green
+              color: primaryColor,
             ),
             const SizedBox(height: 24),
             Text(

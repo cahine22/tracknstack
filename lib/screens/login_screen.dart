@@ -43,11 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 60),
               
               // --- Mystical Branding Section ---
-              const Center(
+              Center(
                 child: Icon(
                   Icons.vpn_key_rounded, // A "Key to the Kingdom" icon
                   size: 80,
-                  color: Color(0xFF50C878), // Explicit Emerald Green
+                  color: primaryColor, 
                 ),
               ),
               const SizedBox(height: 24),
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 label: const Text('Sign in with Google'),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 56),
-                  side: BorderSide(color: primaryColor.withOpacity(0.5)),
+                  side: BorderSide(color: primaryColor.withValues(alpha: 0.5)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),

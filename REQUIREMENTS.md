@@ -19,7 +19,7 @@ status).
 
 *Full-Stack Integration (Milestone 2 Requirements)*
 Ensuring data persistence and security as per the SYE rubric. 
-1.  Multi-Provider Auth: A secure gate requiring Google Sign-In or Email/Password via Firebase.Cloud Data Sync: All transactions, quest history, and level progress must sync to Firestore to allow multi-device acces
+1.  Multi-Provider Auth: A secure gate requiring Google Sign-In or Email/Password via Firebase. Cloud Data Sync: All transactions, quest history, and level progress must sync to Firestore to allow multi-device acces
 2. The "Auth Gate": A top-level widget that listens to the Firebase Auth stream to toggle between the Login/Register screens and the Dashboard.
 
 *The Gamified Financial Dashboard (The "Home" Screen)*
