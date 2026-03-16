@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import '../models/user_model.dart';
+import 'user_service.dart';
 
 /// Pure logic class for [Firebase Authentication] services.
 /// 
@@ -8,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   // Use the default [FirebaseAuth] singleton instance.
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserService _userService = UserService();
 
   /// Exposes the current authentication state as a [Stream].
   /// 
@@ -19,12 +22,25 @@ class AuthService {
   /// 
   /// [email] and [password] are provided by the user in the Register screen.
   /// Throws a [FirebaseAuthException] if the signup fails (e.g., weak password).
-  Future<UserCredential?> signUp(String email, String password) async {
+  Future<UserCredential?> signUp(String email, String password, String displayName) async {
     try {
-      return await _auth.createUserWithEmailAndPassword(
+      final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Guardrail: Ensure we have a user before saving to Firestore.
+      if (credential.user != null) {
+        final newUser = UserModel(
+          uid: credential.user!.uid,
+          email: email,
+          displayName: displayName,
+        );
+        // Save the new user profile in Firestore immediately.
+        await _userService.saveUser(newUser);
+      }
+      
+      return credential;
     } catch (e) {
       // Re-throw so the UI can catch it and show an error Snackbar.
       rethrow;

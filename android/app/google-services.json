@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "650242887825",
+    "project_id": "tracknstack-4c50e",
+    "storage_bucket": "tracknstack-4c50e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650242887825:android:01a644f6573a0e43f4af30",
+        "android_client_info": {
+          "package_name": "com.example.tracknstack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV-m5o8UVkM3fjPBzmt0lFBRHkl06XCNU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
