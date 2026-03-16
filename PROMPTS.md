@@ -13,3 +13,4 @@
 
 [x] 4. Flush out the placeholder login screen to be a full signup screen. Stick to the themes and make it feel mystical with icons and colors. under the log in screen, have a register link that goes to a screen where the user can sign up instead of log in. for now, its ok to have the register screen just be a placeholder screen. there should be email and password feilds, and then an option to sign up with google (even though thats not hooked up yet) 
 
+[x] 5. I just created the tracknstack firebase database, now connect it through the code and make it so that a user can create a profile or sign up through the appropriate buttons on the log in screen. Make the sign up page flushed out and on theme, and avalible through the link on the log in screen. once the user has signed up or logged in, take them to the dashboard homepage. 

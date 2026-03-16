@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/auth_provider.dart';
 import 'register_screen.dart';
 
 /// The primary entrance to the app's "Financial Quest".
 /// 
 /// This screen uses our custom [AppTheme] to create a 
 /// mystical, high-contrast gaming environment.
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   // Use text controllers to capture user input from the fields.
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  
+  // Track loading state to show a spinner during authentication.
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -24,6 +29,37 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  /// The logic to trigger the sign-in quest.
+  Future<void> _signInQuest() async {
+    if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your credentials to resume your journey.')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Call our [AuthService] via Riverpod to authenticate.
+      await ref.read(authServiceProvider).signIn(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      
+      // On success, the [AuthGate] will automatically transition 
+      // the user to the Dashboard once the auth state changes.
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to resume quest: ${e.toString()}')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -96,10 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // --- Action Buttons ---
               ElevatedButton(
-                onPressed: () {
-                  // TODO: Connect to AuthService.signIn()
-                },
-                child: const Text('Resume Quest'),
+                onPressed: _isLoading ? null : _signInQuest,
+                child: _isLoading 
+                  ? const CircularProgressIndicator(color: Colors.black) 
+                  : const Text('Resume Quest'),
               ),
               const SizedBox(height: 20),
               

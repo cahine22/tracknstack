@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'theme.dart';
 import 'screens/auth_gate.dart';
 
@@ -9,18 +9,9 @@ import 'screens/auth_gate.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Firebase. 
-  // On Web, we provide placeholder options to prevent crashes during UI development.
-  // Once 'flutterfire configure' is run, replace this with DefaultFirebaseOptions.
+  // Initialize Firebase with generated configuration.
   await Firebase.initializeApp(
-    options: kIsWeb 
-      ? const FirebaseOptions(
-          apiKey: "placeholder-api-key",
-          appId: "placeholder-app-id",
-          messagingSenderId: "placeholder-sender-id",
-          projectId: "placeholder-project-id",
-        )
-      : null,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   
   runApp(
