@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'firebase_options.dart';
 import 'theme.dart';
 import 'screens/auth_gate.dart';
@@ -9,7 +10,10 @@ import 'screens/auth_gate.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Firebase with generated configuration.
+  // Load environment variables (API keys, etc.)
+  await dotenv.load(fileName: ".env");
+  
+  // Initialize Firebase with configuration from .env via DefaultFirebaseOptions.
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

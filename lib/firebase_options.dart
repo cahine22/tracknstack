@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -40,49 +41,49 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAmfDZHw6F_RXYuZ4zyQIMtGYYVhVWZ5XM',
-    appId: '1:650242887825:web:4f5774b866e8d80ff4af30',
-    messagingSenderId: '650242887825',
-    projectId: 'tracknstack-4c50e',
-    authDomain: 'tracknstack-4c50e.firebaseapp.com',
-    storageBucket: 'tracknstack-4c50e.firebasestorage.app',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.get('FIREBASE_WEB_API_KEY'),
+    appId: dotenv.get('FIREBASE_WEB_APP_ID'),
+    messagingSenderId: dotenv.get('FIREBASE_MESSAGING_SENDER_ID'),
+    projectId: dotenv.get('FIREBASE_PROJECT_ID'),
+    authDomain: '${dotenv.get('FIREBASE_PROJECT_ID')}.firebaseapp.com',
+    storageBucket: dotenv.get('FIREBASE_STORAGE_BUCKET'),
     measurementId: 'G-0Z8CC6LFRV',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCV-m5o8UVkM3fjPBzmt0lFBRHkl06XCNU',
-    appId: '1:650242887825:android:01a644f6573a0e43f4af30',
-    messagingSenderId: '650242887825',
-    projectId: 'tracknstack-4c50e',
-    storageBucket: 'tracknstack-4c50e.firebasestorage.app',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.get('FIREBASE_ANDROID_API_KEY'),
+    appId: dotenv.get('FIREBASE_ANDROID_APP_ID'),
+    messagingSenderId: dotenv.get('FIREBASE_MESSAGING_SENDER_ID'),
+    projectId: dotenv.get('FIREBASE_PROJECT_ID'),
+    storageBucket: dotenv.get('FIREBASE_STORAGE_BUCKET'),
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAHltZI9H6reKeeNcMlL7k_Sx3FNzwdRoM',
-    appId: '1:650242887825:ios:0738e1ba0ac82f35f4af30',
-    messagingSenderId: '650242887825',
-    projectId: 'tracknstack-4c50e',
-    storageBucket: 'tracknstack-4c50e.firebasestorage.app',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.get('FIREBASE_IOS_API_KEY'),
+    appId: dotenv.get('FIREBASE_IOS_APP_ID'),
+    messagingSenderId: dotenv.get('FIREBASE_MESSAGING_SENDER_ID'),
+    projectId: dotenv.get('FIREBASE_PROJECT_ID'),
+    storageBucket: dotenv.get('FIREBASE_STORAGE_BUCKET'),
     iosBundleId: 'com.example.tracknstack',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAHltZI9H6reKeeNcMlL7k_Sx3FNzwdRoM',
-    appId: '1:650242887825:ios:0738e1ba0ac82f35f4af30',
-    messagingSenderId: '650242887825',
-    projectId: 'tracknstack-4c50e',
-    storageBucket: 'tracknstack-4c50e.firebasestorage.app',
+  static FirebaseOptions macos = FirebaseOptions(
+    apiKey: dotenv.get('FIREBASE_IOS_API_KEY'),
+    appId: dotenv.get('FIREBASE_IOS_APP_ID'),
+    messagingSenderId: dotenv.get('FIREBASE_MESSAGING_SENDER_ID'),
+    projectId: dotenv.get('FIREBASE_PROJECT_ID'),
+    storageBucket: dotenv.get('FIREBASE_STORAGE_BUCKET'),
     iosBundleId: 'com.example.tracknstack',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAmfDZHw6F_RXYuZ4zyQIMtGYYVhVWZ5XM',
-    appId: '1:650242887825:web:e0013d0c12b55bccf4af30',
-    messagingSenderId: '650242887825',
-    projectId: 'tracknstack-4c50e',
-    authDomain: 'tracknstack-4c50e.firebaseapp.com',
-    storageBucket: 'tracknstack-4c50e.firebasestorage.app',
+  static FirebaseOptions windows = FirebaseOptions(
+    apiKey: dotenv.get('FIREBASE_WINDOWS_API_KEY'),
+    appId: dotenv.get('FIREBASE_WINDOWS_APP_ID'),
+    messagingSenderId: dotenv.get('FIREBASE_MESSAGING_SENDER_ID'),
+    projectId: dotenv.get('FIREBASE_PROJECT_ID'),
+    authDomain: '${dotenv.get('FIREBASE_PROJECT_ID')}.firebaseapp.com',
+    storageBucket: dotenv.get('FIREBASE_STORAGE_BUCKET'),
     measurementId: 'G-3RHLZ3NVLJ',
   );
 }
