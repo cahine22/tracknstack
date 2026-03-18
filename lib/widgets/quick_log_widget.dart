@@ -88,7 +88,7 @@ class _QuickLogWidgetState extends ConsumerState<QuickLogWidget> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<TransactionCategory>(
-              initialValue: _selectedCategory,
+              value: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Category',
                 prefixIcon: Icon(Icons.category_outlined),

@@ -6,6 +6,8 @@ import '../widgets/savings_progress_bar.dart';
 import '../widgets/quick_log_widget.dart';
 import '../widgets/summary_section.dart';
 
+import 'setup_screen.dart';
+
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
@@ -14,25 +16,25 @@ class DashboardScreen extends ConsumerWidget {
     // Watch the real-time user data from Firestore.
     final userDataAsync = ref.watch(userDataProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('TRACK N STACK'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              ref.read(authServiceProvider).signOut();
-            },
-          ),
-        ],
-      ),
-      body: userDataAsync.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(child: Text('No hero profile found.'));
-          }
+    return userDataAsync.when(
+      data: (user) {
+        if (user == null) {
+          return const SetupScreen();
+        }
 
-          return SingleChildScrollView(
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('TRACK N STACK'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () {
+                  ref.read(authServiceProvider).signOut();
+                },
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -61,10 +63,14 @@ class DashboardScreen extends ConsumerWidget {
                 const SizedBox(height: 40),
               ],
             ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(
+          ),
+        );
+      },
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (err, stack) => Scaffold(
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text('Error loading profile: $err'),
