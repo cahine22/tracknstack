@@ -16,3 +16,7 @@
 [x] 5. I just created the tracknstack firebase database, now connect it through the code and make it so that a user can create a profile or sign up through the appropriate buttons on the log in screen. Make the sign up page flushed out and on theme, and avalible through the link on the log in screen. once the user has signed up or logged in, take them to the dashboard homepage. 
 
 [x] 6. make the key icon on the sign up page the same green as the buttons. Also make the background of the screen a brown instead of black, and change that in the theme so theres no black in the color scheme. 
+
+[x] 7. for the sign in and log in pages, have all the necessary error messages on theme with the theme.dart file and general vibe of the app. make sure there is error handling and error messages for wrong email/password, already used emails, and any other common errors. 44
+
+[ ] 8. flush out the dashboard, dont hard code the user name after the welcome, make it the actual user name that was specificied when the user signed up/ logged in. This dashbaprd screen is going to be for when a user already has an account, so make a savings bar and the quic log widgets/ summary widgets that are just cards that a user is inputing their transactions and getting a running summary of their transactions (refer to requirements.md number 5 and 6)

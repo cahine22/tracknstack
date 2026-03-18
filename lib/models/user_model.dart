@@ -8,6 +8,10 @@ class UserModel {
   final String displayName;
   final String? photoUrl;
   final int points;
+  final double monthlyBudget;
+  final Map<String, double> categoryBudgets;
+  final double savingsGoalTarget;
+  final String savingsGoalName;
 
   UserModel({
     required this.uid,
@@ -15,6 +19,15 @@ class UserModel {
     required this.displayName,
     this.photoUrl,
     this.points = 0,
+    this.monthlyBudget = 0.0,
+    this.categoryBudgets = const {
+      'needs': 0.0,
+      'wants': 0.0,
+      'savings': 0.0,
+      'others': 0.0,
+    },
+    this.savingsGoalTarget = 0.0,
+    this.savingsGoalName = 'Main Quest',
   });
 
   /// Factory constructor to create a [UserModel] from a Map.
@@ -26,6 +39,17 @@ class UserModel {
       displayName: data['displayName'] ?? 'User',
       photoUrl: data['photoUrl'],
       points: data['points'] ?? 0,
+      monthlyBudget: (data['monthlyBudget'] ?? 0.0).toDouble(),
+      categoryBudgets: (data['categoryBudgets'] as Map<String, dynamic>?)?.map(
+        (key, value) => MapEntry(key, (value as num).toDouble()),
+      ) ?? const {
+        'needs': 0.0,
+        'wants': 0.0,
+        'savings': 0.0,
+        'others': 0.0,
+      },
+      savingsGoalTarget: (data['savingsGoalTarget'] ?? 0.0).toDouble(),
+      savingsGoalName: data['savingsGoalName'] ?? 'Main Quest',
     );
   }
 
@@ -37,6 +61,10 @@ class UserModel {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'points': points,
+      'monthlyBudget': monthlyBudget,
+      'categoryBudgets': categoryBudgets,
+      'savingsGoalTarget': savingsGoalTarget,
+      'savingsGoalName': savingsGoalName,
     };
   }
 }

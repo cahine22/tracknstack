@@ -43,6 +43,7 @@ class AppTheme {
         onSurface: Colors.white,
         error: errorColor,
       ),
+      primaryColor: primaryColor, // Added explicitly for reliability
       scaffoldBackgroundColor: backgroundColor,
       
       // --- Global Widget Styles ---

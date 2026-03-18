@@ -21,7 +21,6 @@ class AuthService {
   /// Create a new account using Email and Password.
   /// 
   /// [email] and [password] are provided by the user in the Register screen.
-  /// Throws a [FirebaseAuthException] if the signup fails (e.g., weak password).
   Future<UserCredential?> signUp(String email, String password, String displayName) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
@@ -41,24 +40,48 @@ class AuthService {
       }
       
       return credential;
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthError(e);
     } catch (e) {
-      // Re-throw so the UI can catch it and show an error Snackbar.
-      rethrow;
+      throw 'An unexpected error occurred during your registration: $e';
     }
   }
 
   /// Authenticate an existing user.
   /// 
   /// [email] and [password] are checked against Firebase's stored credentials.
-  /// Throws a [FirebaseAuthException] if sign-in fails (e.g., wrong password).
   Future<UserCredential?> signIn(String email, String password) async {
     try {
       return await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthError(e);
     } catch (e) {
-      rethrow;
+      throw 'An unexpected error occurred while resuming your quest: $e';
+    }
+  }
+
+  /// Helper to convert cryptic Firebase codes into mystical, helpful messages.
+  String _handleAuthError(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'user-not-found':
+        return 'No legend found with this email. Perhaps you need to register?';
+      case 'wrong-password':
+        return 'The secret password you provided does not match our scrolls.';
+      case 'email-already-in-use':
+        return 'This email is already tied to another hero\'s quest.';
+      case 'invalid-email':
+        return 'The email format seems to be missing some magic.';
+      case 'weak-password':
+        return 'Your secret password is too weak. Strengthen it to protect your gold.';
+      case 'operation-not-allowed':
+        return 'The gates of this quest are currently closed (Auth not enabled in Firebase).';
+      case 'user-disabled':
+        return 'This hero\'s account has been banished from the realm.';
+      default:
+        return 'A mystical error has blocked your path: ${e.message}';
     }
   }
 

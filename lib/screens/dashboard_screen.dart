@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
+import '../widgets/savings_progress_bar.dart';
+import '../widgets/quick_log_widget.dart';
+import '../widgets/summary_section.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -13,7 +16,7 @@ class DashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('TRACK N STACK'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -23,24 +26,49 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Center(
-        child: userDataAsync.when(
-          data: (user) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Welcome, ${user?.displayName ?? "Unknown User"}!',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Points: ${user?.points ?? 0}',
-                style: const TextStyle(fontSize: 18, color: Colors.greenAccent),
-              ),
-            ],
+      body: userDataAsync.when(
+        data: (user) {
+          if (user == null) {
+            return const Center(child: Text('No hero profile found.'));
+          }
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Welcome Section
+                Text(
+                  'Welcome, ${user.displayName}!',
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 28),
+                ),
+                Text(
+                  'Level 1 Financial Hero (XP: ${user.points})',
+                  style: const TextStyle(color: Colors.white38, fontSize: 14),
+                ),
+                const SizedBox(height: 32),
+
+                // Savings Progress Bar
+                const SavingsProgressBar(),
+                const SizedBox(height: 32),
+
+                // Quick Log Widget
+                const QuickLogWidget(),
+                const SizedBox(height: 32),
+
+                // Summary Cards
+                const SummarySection(),
+                const SizedBox(height: 40),
+              ],
+            ),
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Text('Error loading profile: $err'),
           ),
-          loading: () => const CircularProgressIndicator(),
-          error: (err, stack) => Text('Error loading profile: $err'),
         ),
       ),
     );

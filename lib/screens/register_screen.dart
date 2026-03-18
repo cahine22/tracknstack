@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/quest_branding.dart';
+import '../widgets/quest_text_field.dart';
+import '../widgets/quest_button.dart';
 
 /// The screen where new users can "Join the Quest" and create their profile.
-/// 
-/// This screen follows our 'Emerald Green' gamified theme and 
-/// interacts directly with the [AuthService] to create a user in 
-/// both Firebase Auth and Firestore.
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -15,12 +14,9 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  // Use text controllers to capture user input from the fields.
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  
-  // Track loading state to show a spinner when the "Quest" begins.
   bool _isLoading = false;
 
   @override
@@ -31,14 +27,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     super.dispose();
   }
 
-  /// The logic to trigger the signup quest.
   Future<void> _signUpQuest() async {
-    // Basic validation: Ensure fields aren't empty.
     if (_emailController.text.trim().isEmpty || 
         _passwordController.text.trim().isEmpty || 
         _nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All fields are required to begin the quest.')),
+        SnackBar(
+          content: const Text(
+            'All fields are required to begin the quest.',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       );
       return;
     }
@@ -46,23 +48,27 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Call our [AuthService] via Riverpod to create the account.
-      // This will also create their Firestore profile.
       await ref.read(authServiceProvider).signUp(
         _emailController.text.trim(),
         _passwordController.text.trim(),
         _nameController.text.trim(),
       );
 
-      // If successful, the [AuthGate] will automatically transition 
-      // the user to the Dashboard once the auth state changes.
       if (mounted) {
-        Navigator.pop(context); // Go back to Login (then AuthGate handles it)
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to join quest: $e')),
+          SnackBar(
+            content: Text(
+              e.toString(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
         );
       }
     } finally {
@@ -72,9 +78,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final primaryColor = Theme.of(context).primaryColor;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Join the Quest'),
@@ -89,69 +92,44 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             children: [
               const SizedBox(height: 20),
               
-              // --- Mystical Branding Section ---
-              Center(
-                child: Icon(
-                  Icons.vpn_key_rounded, // Updated to Key icon
-                  size: 80,
-                  color: primaryColor, // Same green as the buttons
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Create Your Legend',
-                style: textTheme.displayLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Enter your details to start your financial journey.',
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-                textAlign: TextAlign.center,
+              const QuestBranding(
+                icon: Icons.vpn_key_rounded,
+                title: 'Create Your Legend',
+                subtitle: 'Enter your details to start your financial journey.',
               ),
               
               const SizedBox(height: 40),
 
-              // --- Credential Input Section ---
-              TextField(
+              QuestTextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Hero Name (Display Name)',
-                  prefixIcon: Icon(Icons.person_outline),
-                ),
+                labelText: 'Hero Name (Display Name)',
+                prefixIcon: Icons.person_outline,
               ),
               const SizedBox(height: 20),
-              TextField(
+              QuestTextField(
                 controller: _emailController,
+                labelText: 'Email Address',
+                prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email Address',
-                  prefixIcon: Icon(Icons.email_outlined),
-                ),
               ),
               const SizedBox(height: 20),
-              TextField(
+              QuestTextField(
                 controller: _passwordController,
+                labelText: 'Secret Password',
+                prefixIcon: Icons.lock_outline,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Secret Password',
-                  prefixIcon: Icon(Icons.lock_outline),
-                ),
               ),
               
               const SizedBox(height: 40),
 
-              // --- Action Button ---
-              ElevatedButton(
-                onPressed: _isLoading ? null : _signUpQuest,
-                child: _isLoading 
-                  ? CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary) 
-                  : const Text('Begin Journey'),
+              QuestButton(
+                label: 'Begin Journey',
+                onPressed: _signUpQuest,
+                isLoading: _isLoading,
               ),
               
               const SizedBox(height: 20),
 
-              // --- Back to Login ---
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Already have a legend? Back to Login'),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/quest_branding.dart';
+import '../widgets/quest_text_field.dart';
+import '../widgets/quest_button.dart';
 import 'register_screen.dart';
 
 /// The primary entrance to the app's "Financial Quest".
@@ -15,27 +18,29 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  // Use text controllers to capture user input from the fields.
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
-  // Track loading state to show a spinner during authentication.
   bool _isLoading = false;
 
   @override
   void dispose() {
-    // Standard practice: Dispose of controllers when the widget is 
-    // removed from the tree to prevent memory leaks.
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  /// The logic to trigger the sign-in quest.
   Future<void> _signInQuest() async {
     if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your credentials to resume your journey.')),
+        SnackBar(
+          content: const Text(
+            'Please enter your credentials to resume your journey.',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       );
       return;
     }
@@ -43,18 +48,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Call our [AuthService] via Riverpod to authenticate.
       await ref.read(authServiceProvider).signIn(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-      
-      // On success, the [AuthGate] will automatically transition 
-      // the user to the Dashboard once the auth state changes.
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to resume quest: ${e.toString()}')),
+          SnackBar(
+            content: Text(
+              e.toString(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
         );
       }
     } finally {
@@ -64,9 +73,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Using [Theme.of(context)] ensures our UI stays in sync 
-    // with the Emerald Green theme we defined earlier.
-    final textTheme = Theme.of(context).textTheme;
     final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
@@ -78,50 +84,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             children: [
               const SizedBox(height: 60),
               
-              // --- Mystical Branding Section ---
-              Center(
-                child: Icon(
-                  Icons.vpn_key_rounded, // A "Key to the Kingdom" icon
-                  size: 80,
-                  color: primaryColor, 
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Track N Stack',
-                style: textTheme.displayLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Unlock your financial mastery.',
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-                textAlign: TextAlign.center,
+              const QuestBranding(
+                icon: Icons.vpn_key_rounded,
+                title: 'Track N Stack',
+                subtitle: 'Unlock your financial mastery.',
               ),
               
               const SizedBox(height: 60),
 
-              // --- Credential Input Section ---
-              TextField(
+              QuestTextField(
                 controller: _emailController,
+                labelText: 'Email Address',
+                prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email Address',
-                  prefixIcon: Icon(Icons.email_outlined),
-                ),
               ),
               const SizedBox(height: 20),
-              TextField(
+              QuestTextField(
                 controller: _passwordController,
-                obscureText: true, // Hide password characters
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  prefixIcon: Icon(Icons.lock_outline),
-                ),
+                labelText: 'Password',
+                prefixIcon: Icons.lock_outline,
+                obscureText: true,
               ),
               const SizedBox(height: 12),
               
-              // Helper text for returning users
               const Text(
                 'Enter your credentials to resume your journey.',
                 style: TextStyle(color: Colors.white38, fontSize: 12),
@@ -130,20 +115,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               
               const SizedBox(height: 40),
 
-              // --- Action Buttons ---
-              ElevatedButton(
-                onPressed: _isLoading ? null : _signInQuest,
-                child: _isLoading 
-                  ? CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary) 
-                  : const Text('Resume Quest'),
+              QuestButton(
+                label: 'Resume Quest',
+                onPressed: _signInQuest,
+                isLoading: _isLoading,
               ),
               const SizedBox(height: 20),
               
-              // Google Sign-In Placeholder (Requirement #1)
+              // Google Sign-In Placeholder
               OutlinedButton.icon(
-                onPressed: () {
-                  // Placeholder for Google Auth logic
-                },
+                onPressed: () {},
                 icon: const Icon(Icons.g_mobiledata, size: 32),
                 label: const Text('Sign in with Google'),
                 style: OutlinedButton.styleFrom(
@@ -157,23 +138,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               const SizedBox(height: 40),
 
-              // --- Navigation to Register ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("New to the quest? "),
-                  GestureDetector(
-                    onTap: () {
-                      // Navigate to our newly created Register screen.
+                  TextButton(
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const RegisterScreen()),
                       );
                     },
-                    child: Text(
+                    style: TextButton.styleFrom(
+                      foregroundColor: primaryColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      // This ensures it uses the button cursor and has a splash effect
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    child: const Text(
                       "Join now.",
                       style: TextStyle(
-                        color: primaryColor,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
                       ),
