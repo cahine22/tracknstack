@@ -23,3 +23,4 @@
 
 [x] 9. Fix: Resolve infinite loading during registration and ensure mandatory onboarding flow. The sign-up process was hanging while waiting for Firestore sync. Update AuthService to use offline persistence for the initial profile and ensure that the DashboardScreen correctly redirects new users to the SetupScreen (Requirement 12) by delaying the Firestore document creation until the setup ritual is complete.
 
+[x] 10. right now, the 4 categories of budgeting are needs, wants, others, and savings. the savings should not be part of the budgeting goal, but should be a seperate calculation because its not supposed to be categoriszed with the budget. If the savings goes up its a good thing, if the spending goes up its a bad thing. make the savings card at the bottom of the screen in the savings summary not apart of the budgeting goal calculation, and get rid of the text on the summary cards of the sub goals

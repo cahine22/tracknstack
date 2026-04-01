@@ -54,17 +54,18 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
     try {
       final authUser = ref.read(authStateProvider).value;
       if (authUser != null) {
-        final totalBudget = double.parse(_budgetController.text.trim());
-        // Simple distribution: 50/30/20 rule as a default
+        final spendingBudget = double.parse(_budgetController.text.trim());
+        // Simple distribution for SPENDING only (Prompt 10)
+        // Savings is now handled separately by the Savings Goal.
         final newUser = UserModel(
           uid: authUser.uid,
           email: authUser.email ?? '',
           displayName: _nameController.text.trim(),
-          monthlyBudget: totalBudget,
+          monthlyBudget: spendingBudget,
           categoryBudgets: {
-            'needs': totalBudget * 0.5,
-            'wants': totalBudget * 0.3,
-            'savings': totalBudget * 0.2,
+            'needs': spendingBudget * 0.6,
+            'wants': spendingBudget * 0.4,
+            'savings': 0.0, // Separated from the spending budget
             'others': 0.0,
           },
           savingsGoalTarget: double.parse(_goalAmountController.text.trim()),
