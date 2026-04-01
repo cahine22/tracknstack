@@ -28,15 +28,16 @@ class AuthService {
         password: password,
       );
 
-      // Guardrail: Ensure we have a user before saving to Firestore.
+      // Guardrail: Ensure we have a user before proceeding.
       if (credential.user != null) {
-        final newUser = UserModel(
-          uid: credential.user!.uid,
-          email: email,
-          displayName: displayName,
-        );
-        // Save the new user profile in Firestore immediately.
-        await _userService.saveUser(newUser);
+        // Update the Firebase Auth profile with the display name.
+        // This allows the SetupScreen to pre-fill the name even before 
+        // the Firestore document is created.
+        await credential.user!.updateDisplayName(displayName);
+        
+        // Note: We NO LONGER create the Firestore document here.
+        // By not creating it, the DashboardScreen will detect that the user 
+        // has no profile data and will show the mandatory SetupScreen.
       }
       
       return credential;

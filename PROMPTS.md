@@ -20,3 +20,6 @@
 [x] 7. for the sign in and log in pages, have all the necessary error messages on theme with the theme.dart file and general vibe of the app. make sure there is error handling and error messages for wrong email/password, already used emails, and any other common errors. 44
 
 [x] 8. flush out the dashboard, dont hard code the user name after the welcome, make it the actual user name that was specificied when the user signed up/ logged in. This dashbaprd screen is going to be for when a user already has an account, so make a savings bar and the quic log widgets/ summary widgets that are just cards that a user is inputing their transactions and getting a running summary of their transactions (refer to requirements.md number 5 and 6)
+
+[x] 9. Fix: Resolve infinite loading during registration and ensure mandatory onboarding flow. The sign-up process was hanging while waiting for Firestore sync. Update AuthService to use offline persistence for the initial profile and ensure that the DashboardScreen correctly redirects new users to the SetupScreen (Requirement 12) by delaying the Firestore document creation until the setup ritual is complete.
+
