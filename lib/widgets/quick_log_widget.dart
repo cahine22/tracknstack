@@ -82,13 +82,13 @@ class _QuickLogWidgetState extends ConsumerState<QuickLogWidget> {
             const SizedBox(height: 20),
             QuestTextField(
               controller: _amountController,
-              labelText: String.fromCharCode( 0x0024) + ' Amount',
+              labelText: '${String.fromCharCode( 0x0024)} Amount',
               prefixIcon: Icons.attach_money,
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<TransactionCategory>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Category',
                 prefixIcon: Icon(Icons.category_outlined),

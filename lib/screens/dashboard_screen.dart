@@ -5,6 +5,7 @@ import '../providers/user_provider.dart';
 import '../widgets/savings_progress_bar.dart';
 import '../widgets/quick_log_widget.dart';
 import '../widgets/summary_section.dart';
+import '../widgets/character_avatar.dart';
 
 import 'setup_screen.dart';
 
@@ -39,14 +40,40 @@ class DashboardScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Welcome Section
-                Text(
-                  'Welcome, ${user.displayName}!',
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 28),
-                ),
-                Text(
-                  'Level 1 Financial Hero (XP: ${user.points})',
-                  style: const TextStyle(color: Colors.white38, fontSize: 14),
+                // Character Profile Section
+                Row(
+                  children: [
+                    CharacterAvatar(user: user),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome,',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white38),
+                          ),
+                          Text(
+                            user.displayName,
+                            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Financial Hero',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 32),
 

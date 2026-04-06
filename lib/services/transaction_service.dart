@@ -8,14 +8,18 @@ class TransactionService {
   /// Reference to the 'transactions' collection in Firestore.
   CollectionReference get _transactionsRef => _firestore.collection('transactions');
 
-  /// Add a new transaction.
+  /// Add a new transaction and reward the user with XP.
   Future<void> addTransaction(TransactionModel transaction) async {
-    // We do not await the server write to ensure the UI updates immediately 
-    // using Firestore's offline persistence and to prevent infinite spinning 
-    // if the network is slow or offline. 
-    // However, we wait a brief moment to allow the local cache to propagate 
-    // the new data through the stream and update the summary cards.
+    // 1. Add the transaction to Firestore
     _transactionsRef.add(transaction.toMap());
+
+    // 2. Award XP (+5 per log as per requirements)
+    final userDoc = _firestore.collection('users').doc(transaction.userId);
+    await userDoc.update({
+      'points': FieldValue.increment(5),
+    });
+
+    // 3. Brief delay for local cache propagation
     await Future.delayed(const Duration(milliseconds: 300));
   }
 

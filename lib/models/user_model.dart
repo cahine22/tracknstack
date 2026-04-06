@@ -67,4 +67,46 @@ class UserModel {
       'savingsGoalName': savingsGoalName,
     };
   }
+
+  /// Leveling Logic: Level = (sqrt(points) / 10).floor() + 1
+  int get currentLevel => (Math.sqrt(points) / 10).floor() + 1;
+
+  /// XP required for the NEXT level
+  int get xpForNextLevel => Math.pow((currentLevel) * 10, 2).toInt();
+
+  /// XP required for the CURRENT level
+  int get xpForCurrentLevel => Math.pow((currentLevel - 1) * 10, 2).toInt();
+
+  /// Progress (0.0 to 1.0) towards the next level
+  double get percentToNextLevel {
+    final range = xpForNextLevel - xpForCurrentLevel;
+    final progress = points - xpForCurrentLevel;
+    if (range == 0) return 0.0;
+    return (progress / range).clamp(0.0, 1.0);
+  }
+}
+
+/// Simple Math polyfill for level calculations
+class Math {
+  static double sqrt(num n) => _sqrt(n.toDouble());
+  static double _sqrt(double n) {
+    if (n < 0) return double.nan;
+    if (n == 0) return 0;
+    double x = n;
+    double y = 1;
+    double e = 0.000001;
+    while (x - y > e) {
+      x = (x + y) / 2;
+      y = n / x;
+    }
+    return x;
+  }
+
+  static num pow(num base, num exponent) {
+    num result = 1;
+    for (int i = 0; i < exponent; i++) {
+      result *= base;
+    }
+    return result;
+  }
 }
