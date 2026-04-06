@@ -10,11 +10,13 @@ class TransactionService {
 
   /// Add a new transaction.
   Future<void> addTransaction(TransactionModel transaction) async {
-    // We do not await this write to ensure the UI updates immediately 
-    // using Firestore's offline persistence. Awaiting would cause 
-    // the 'loading' icon to spin forever if the network is slow or 
-    // the server hasn't acknowledged yet.
+    // We do not await the server write to ensure the UI updates immediately 
+    // using Firestore's offline persistence and to prevent infinite spinning 
+    // if the network is slow or offline. 
+    // However, we wait a brief moment to allow the local cache to propagate 
+    // the new data through the stream and update the summary cards.
     _transactionsRef.add(transaction.toMap());
+    await Future.delayed(const Duration(milliseconds: 300));
   }
 
   /// Retrieve all transactions for a specific user as a [Stream].

@@ -26,4 +26,4 @@
 [x] 10. right now, the 4 categories of budgeting are needs, wants, others, and savings. the savings should not be part of the budgeting goal, but should be a seperate calculation because its not supposed to be categoriszed with the budget. If the savings goes up its a good thing, if the spending goes up its a bad thing. make the savings card at the bottom of the screen in the savings summary not apart of the budgeting goal 
 calculation, and get rid of the text on the summary cards of the sub goals
 
-[x] whenver you quick log a transaction, there is the spinning icon forever. redo it so when the cards get updated the spinning icon stops
+[x] 11. whenever you quick log a transaction, there is the spinning icon forever. redo it so when the cards get updated the spinning icon stops
