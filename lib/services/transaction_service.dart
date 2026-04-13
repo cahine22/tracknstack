@@ -10,29 +10,34 @@ class TransactionService {
 
   /// Add a new transaction and reward the user with XP.
   Future<void> addTransaction(TransactionModel transaction) async {
-    // 1. Add the transaction to Firestore
+    // 1. Add the transaction and XP update (NOT awaited)
     _transactionsRef.add(transaction.toMap());
-
-    // 2. Award XP (+5 per log as per requirements)
+    
     final userDoc = _firestore.collection('users').doc(transaction.userId);
-    await userDoc.update({
+    userDoc.update({
       'points': FieldValue.increment(5),
     });
 
-    // 3. Brief delay for local cache propagation
+    // 2. Brief delay for local cache propagation
     await Future.delayed(const Duration(milliseconds: 300));
   }
 
   /// Retrieve all transactions for a specific user as a [Stream].
   Stream<List<TransactionModel>> getTransactions(String userId) {
+    // We remove the orderBy('date') to avoid requiring a composite index.
+    // Instead, we sort the transactions in memory on the client side.
     return _transactionsRef
         .where('userId', isEqualTo: userId)
-        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
+      final transactions = snapshot.docs
           .map((doc) => TransactionModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
           .toList();
+      
+      // Client-side sorting: newest first.
+      transactions.sort((a, b) => b.date.compareTo(a.date));
+      
+      return transactions;
     });
   }
 }

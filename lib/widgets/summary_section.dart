@@ -5,6 +5,7 @@ import '../providers/transaction_provider.dart';
 import '../providers/user_provider.dart';
 import 'spending_budget_card.dart';
 import 'summary_card.dart';
+import '../screens/transaction_history_screen.dart';
 
 /// A section that displays financial summaries using modular cards.
 class SummarySection extends ConsumerWidget {
@@ -27,15 +28,33 @@ class SummarySection extends ConsumerWidget {
     final totalSpent = spendingCategories.fold(0.0, (sum, cat) => sum + (categoryTotals[cat] ?? 0.0));
     final totalBudget = spendingCategories.fold(0.0, (sum, cat) => sum + (userData.categoryBudgets[cat.name] ?? 0.0));
 
+    void navigateToHistory(TransactionCategory? category) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TransactionHistoryScreen(filterCategory: category),
+        ),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SpendingBudgetCard(spent: totalSpent, budget: totalBudget),
         const SizedBox(height: 24),
         
-        Text(
-          'Quest Progress Summary',
-          style: Theme.of(context).textTheme.titleLarge,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Quest Progress Summary',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            TextButton(
+              onPressed: () => navigateToHistory(null),
+              child: const Text('View All'),
+            ),
+          ],
         ),
         const SizedBox(height: 16),
         
@@ -52,6 +71,7 @@ class SummarySection extends ConsumerWidget {
               spent: categoryTotals[category] ?? 0.0,
               budget: userData.categoryBudgets[category.name] ?? 0.0,
               isSubGoal: true,
+              onTap: () => navigateToHistory(category),
             );
           }).toList(),
         ),
@@ -63,6 +83,7 @@ class SummarySection extends ConsumerWidget {
           budget: userData.categoryBudgets[savingsCategory.name] ?? 0.0,
           isSubGoal: false,
           isFullWidth: true,
+          onTap: () => navigateToHistory(savingsCategory),
         ),
       ],
     );

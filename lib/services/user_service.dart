@@ -32,4 +32,21 @@ class UserService {
       return null;
     });
   }
+
+  /// Award bonus XP to the user (e.g., for completing a savings goal).
+  Future<void> awardBonusXP(String uid, int bonusXP) async {
+    await _usersRef.doc(uid).update({
+      'points': FieldValue.increment(bonusXP),
+    });
+  }
+
+  /// Start a new savings goal by updating the target, name, and base.
+  Future<void> startNewSavingsGoal(String uid, String newName, double newTarget, double currentTotalSavings) async {
+    await _usersRef.doc(uid).update({
+      'savingsGoalName': newName,
+      'savingsGoalTarget': newTarget,
+      'savingsGoalBase': currentTotalSavings,
+      'completedGoalsCount': FieldValue.increment(1),
+    });
+  }
 }

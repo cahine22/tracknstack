@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'user_service.dart';
 
 /// Pure logic class for [Firebase Authentication] services.
@@ -9,6 +10,7 @@ import 'user_service.dart';
 class AuthService {
   // Use the default [FirebaseAuth] singleton instance.
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final UserService _userService = UserService();
 
   /// Exposes the current authentication state as a [Stream].
@@ -60,6 +62,31 @@ class AuthService {
       throw _handleAuthError(e);
     } catch (e) {
       throw 'An unexpected error occurred while resuming your quest: $e';
+    }
+  }
+
+  /// Authenticate using Google Sign-In.
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      // Trigger the Google authentication flow.
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return null; // User cancelled
+
+      // Obtain the auth details from the request.
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Create a new credential.
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Once signed in, return the UserCredential.
+      return await _auth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthError(e);
+    } catch (e) {
+      throw 'The Google Gate failed to open: $e';
     }
   }
 

@@ -43,12 +43,21 @@ class TransactionModel {
   });
 
   factory TransactionModel.fromMap(Map<String, dynamic> data, String id) {
+    // Robustly parse the date, defaulting to now if missing.
+    final dynamic dateData = data['date'];
+    DateTime dateValue = DateTime.now();
+    if (dateData is Timestamp) {
+      dateValue = dateData.toDate();
+    } else if (dateData is String) {
+      dateValue = DateTime.tryParse(dateData) ?? DateTime.now();
+    }
+
     return TransactionModel(
       id: id,
       userId: data['userId'] ?? '',
       amount: (data['amount'] ?? 0.0).toDouble(),
       category: TransactionCategory.fromString(data['category'] ?? 'others'),
-      date: (data['date'] as Timestamp).toDate(),
+      date: dateValue,
       note: data['note'],
     );
   }

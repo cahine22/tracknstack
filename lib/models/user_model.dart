@@ -12,6 +12,8 @@ class UserModel {
   final Map<String, double> categoryBudgets;
   final double savingsGoalTarget;
   final String savingsGoalName;
+  final double savingsGoalBase;
+  final int completedGoalsCount;
 
   UserModel({
     required this.uid,
@@ -28,6 +30,8 @@ class UserModel {
     },
     this.savingsGoalTarget = 0.0,
     this.savingsGoalName = 'Main Quest',
+    this.savingsGoalBase = 0.0,
+    this.completedGoalsCount = 0,
   });
 
   /// Factory constructor to create a [UserModel] from a Map.
@@ -50,6 +54,8 @@ class UserModel {
       },
       savingsGoalTarget: (data['savingsGoalTarget'] ?? 0.0).toDouble(),
       savingsGoalName: data['savingsGoalName'] ?? 'Main Quest',
+      savingsGoalBase: (data['savingsGoalBase'] ?? 0.0).toDouble(),
+      completedGoalsCount: data['completedGoalsCount'] ?? 0,
     );
   }
 
@@ -65,6 +71,8 @@ class UserModel {
       'categoryBudgets': categoryBudgets,
       'savingsGoalTarget': savingsGoalTarget,
       'savingsGoalName': savingsGoalName,
+      'savingsGoalBase': savingsGoalBase,
+      'completedGoalsCount': completedGoalsCount,
     };
   }
 

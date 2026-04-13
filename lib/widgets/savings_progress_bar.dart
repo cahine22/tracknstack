@@ -16,7 +16,8 @@ class SavingsProgressBar extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final progress = (totalSavings / userData.savingsGoalTarget).clamp(0.0, 1.0);
+    final currentGoalSavings = (totalSavings - userData.savingsGoalBase).clamp(0.0, double.infinity);
+    final progress = (currentGoalSavings / userData.savingsGoalTarget).clamp(0.0, 1.0);
     final percentage = (progress * 100).toStringAsFixed(1);
 
     return Card(
@@ -54,7 +55,7 @@ class SavingsProgressBar extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              '\$${totalSavings.toStringAsFixed(2)} / \$${userData.savingsGoalTarget.toStringAsFixed(2)}',
+              '\$${currentGoalSavings.toStringAsFixed(2)} / \$${userData.savingsGoalTarget.toStringAsFixed(2)}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],

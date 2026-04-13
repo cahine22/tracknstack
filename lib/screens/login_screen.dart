@@ -122,9 +122,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 20),
               
-              // Google Sign-In Placeholder
+              // Google Sign-In
               OutlinedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  setState(() => _isLoading = true);
+                  try {
+                    await ref.read(authServiceProvider).signInWithGoogle();
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            e.toString(),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                      );
+                    }
+                  } finally {
+                    if (mounted) setState(() => _isLoading = false);
+                  }
+                },
                 icon: const Icon(Icons.g_mobiledata, size: 32),
                 label: const Text('Sign in with Google'),
                 style: OutlinedButton.styleFrom(

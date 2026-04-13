@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tracknstack/screens/auth_gate.dart';
 import 'package:tracknstack/providers/auth_provider.dart';
+import 'package:tracknstack/providers/user_provider.dart';
 import 'package:tracknstack/screens/login_screen.dart';
 import 'package:tracknstack/screens/dashboard_screen.dart';
+import 'package:tracknstack/models/user_model.dart';
 
 // Mock User class for testing
 class MockUser extends Fake implements User {
@@ -13,6 +15,8 @@ class MockUser extends Fake implements User {
   String get uid => '12345';
   @override
   String get email => 'test@example.com';
+  @override
+  String? get displayName => 'Test Hero';
 }
 
 void main() {
@@ -40,12 +44,24 @@ void main() {
   });
 
   testWidgets('AuthGate shows DashboardScreen when authenticated', (WidgetTester tester) async {
+    final mockUserModel = UserModel(
+      uid: '12345',
+      email: 'test@example.com',
+      displayName: 'Test Hero',
+      points: 100,
+      monthlyBudget: 1000,
+      savingsGoalTarget: 5000,
+      savingsGoalName: 'New Car',
+    );
+
     // Build our app and trigger a frame.
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           // Override the authStateProvider to return a mock user (authenticated)
           authStateProvider.overrideWith((ref) => Stream.value(MockUser())),
+          // Override the userDataProvider to return a mock user model
+          userDataProvider.overrideWith((ref) => Stream.value(mockUserModel)),
         ],
         child: const MaterialApp(
           home: AuthGate(),
@@ -59,7 +75,7 @@ void main() {
 
     // Verify that DashboardScreen is shown
     expect(find.byType(DashboardScreen), findsOneWidget);
-    expect(find.text('Track N Stack Dashboard'), findsOneWidget);
+    expect(find.text('TRACK N STACK'), findsOneWidget);
   });
 
   testWidgets('AuthGate shows loading screen initially', (WidgetTester tester) async {

@@ -7,6 +7,7 @@ class SummaryCard extends StatelessWidget {
   final double budget;
   final bool isSubGoal;
   final bool isFullWidth;
+  final VoidCallback? onTap;
 
   const SummaryCard({
     super.key,
@@ -15,6 +16,7 @@ class SummaryCard extends StatelessWidget {
     required this.budget,
     this.isSubGoal = false,
     this.isFullWidth = false,
+    this.onTap,
   });
 
   @override
@@ -37,38 +39,42 @@ class SummaryCard extends StatelessWidget {
     return SizedBox(
       width: isFullWidth ? double.infinity : null,
       child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                _getCategoryIcon(category),
-                color: primaryColor,
-                size: 28,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                category.displayName,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '\$${spent.toStringAsFixed(0)}',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: statusColor,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  _getCategoryIcon(category),
+                  color: primaryColor,
+                  size: 28,
                 ),
-              ),
-              // Only show the "Goal" text if it's NOT a sub-goal (Spending category) 
-              // and we have a budget set.
-              if (!isSubGoal && budget > 0)
+                const SizedBox(height: 8),
                 Text(
-                  'Goal: \$${budget.toStringAsFixed(0)}',
-                  style: const TextStyle(fontSize: 12, color: Colors.white38),
+                  category.displayName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  '\$${spent.toStringAsFixed(0)}',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: statusColor,
+                  ),
+                ),
+                // Only show the "Goal" text if it's NOT a sub-goal (Spending category) 
+                // and we have a budget set.
+                if (!isSubGoal && budget > 0)
+                  Text(
+                    'Goal: \$${budget.toStringAsFixed(0)}',
+                    style: const TextStyle(fontSize: 12, color: Colors.white38),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

@@ -28,5 +28,14 @@ calculation, and get rid of the text on the summary cards of the sub goals
 
 [x] 11. whenever you quick log a transaction, there is the spinning icon forever. redo it so when the cards get updated the spinning icon stops
 
-[x] 12. as per number 4 in the requirements document, impliment an avatar that changes as you level up, and make the level up logic follow the formula:  Level = (sqrt(points) /10).floor() + 1. Create a custom widget in lib/widgets/character_avatar.dart that includes: A Stack containing a large CircleAvatar for the icon. A CircularProgressIndicator wrapped around the icon to show how close the user is to the next level (XP progress).A Badge at the bottom displaying the actual level number (e.g., "LVL 4"). Add getters to UserModel for currentLevel, xpTowardsNextLevel, and percentToNextLevel. UI: Replace the text-only welcome message on the DashboardScreen with this new CharacterAvatar widget. Service: Update TransactionService to grant XP automatically when transactions are logged. Update the UserModel with this leveling logic?
+[x] 12. as per number 4 in the requirements document, impliment an avatar that changes as you level up, and make the level up logic follow the formula:  Level = (sqrt(points) /10).floor() + 1. Create a custom widget in lib/widgets/character_avatar.dart that includes: A Stack containing a large CircleAvatar for the icon. A CircularProgressIndicator wrapped around the icon to show how close the user is to the next level (XP progress).A Badge at the bottom displaying the actual level number (e.g., "LVL 4"). Add getters to UserModel for currentLevel, xpTowardsNextLevel, and percentToNextLevel. UI: Replace the text-only welcome message on the DashboardScreen with this new CharacterAvatar widget. Service: Update TransactionService to grant XP automatically when transactions are logged. Update the UserModel with this leveling logic
+
+[x] 14. Make the summary card be interactive so if the user clicks on it they are taken to a screen with a whole log of their history of their transactions that is categorized and chronological. make it easily readable and time stamped. as per requirement 6 in requirements.md
+
+[x] 15. As per requirement 4 (The Character Avatar), get rid of the redundant "Welcome," message on the DashboardScreen as it is now replaced by the avatar widget.
+
+[x] 16. As per requirement 1 (Multi-Provider Auth), set up the Google Sign-In integration in the AuthService and LoginScreen.
+
+[x] 17. As per requirement 3 (Savings Progress Bar) and 10 (Leveling Logic), structure the savings goal so that if the user reaches the goal and saves the desired amount, they both earn bonus XP and are prompted to create a new savings goal to work towards.
+
 

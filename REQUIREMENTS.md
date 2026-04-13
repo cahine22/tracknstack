@@ -48,6 +48,9 @@ The system that handles the leveling logic and user growth.
     - Set their Monthly Budget (distributed across Needs, Wants, Savings, Others).
     - Set their primary Savings Goal (Target Amount and Name).
 
+*Data Sync*
+13. Ensure that the users data is synced through Firecloud and Firestore so that a user can log into an account and retrieve their previously submitted data 
+
 
 
 

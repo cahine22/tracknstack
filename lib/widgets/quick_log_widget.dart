@@ -52,7 +52,7 @@ class _QuickLogWidgetState extends ConsumerState<QuickLogWidget> {
         _noteController.clear();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Transaction logged! +5 XP (XP logic coming soon)')),
+            const SnackBar(content: Text('Transaction logged!')),
           );
         }
       }
