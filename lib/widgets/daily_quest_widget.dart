@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
-import '../providers/user_provider.dart';
 
 class DailyQuestWidget extends ConsumerWidget {
   final UserModel user;
@@ -30,9 +29,9 @@ class DailyQuestWidget extends ConsumerWidget {
           title: "Log today's spending",
           reward: '+20 XP',
           isCompleted: completedQuests.contains('daily_log'),
-          onComplete: () {
-            ref.read(userServiceProvider).completeQuest(user.uid, 'daily_log', 20);
-          },
+          description: isCompleted 
+            ? "Bounty collected! Check back tomorrow." 
+            : "Complete a 'Quick Log' to earn this reward.",
         ),
       ],
     );
@@ -44,14 +43,14 @@ class _QuestItem extends StatelessWidget {
   final String title;
   final String reward;
   final bool isCompleted;
-  final VoidCallback onComplete;
+  final String description;
 
   const _QuestItem({
     required this.id,
     required this.title,
     required this.reward,
     required this.isCompleted,
-    required this.onComplete,
+    required this.description,
   });
 
   @override
@@ -71,45 +70,55 @@ class _QuestItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            isCompleted ? Icons.check_circle : Icons.RadioButtonUnchecked,
-            color: isCompleted ? theme.primaryColor : Colors.white38,
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isCompleted ? theme.primaryColor.withValues(alpha: 0.1) : Colors.white05,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isCompleted ? Icons.check_circle : Icons.pending_actions_rounded,
+              color: isCompleted ? theme.primaryColor : Colors.white38,
+              size: 28,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    decoration: isCompleted ? TextDecoration.lineThrough : null,
-                    color: isCompleted ? Colors.white38 : Colors.white,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        decoration: isCompleted ? TextDecoration.lineThrough : null,
+                        color: isCompleted ? Colors.white38 : Colors.white,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      reward,
+                      style: TextStyle(
+                        color: theme.primaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 4),
                 Text(
-                  reward,
-                  style: TextStyle(
-                    color: theme.primaryColor,
+                  description,
+                  style: const TextStyle(
+                    color: Colors.white38,
                     fontSize: 12,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
-          if (!isCompleted)
-            ElevatedButton(
-              onPressed: onComplete,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.primaryColor,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                minimumSize: const Size(0, 36),
-              ),
-              child: const Text('CLAIM'),
-            ),
         ],
       ),
     );
