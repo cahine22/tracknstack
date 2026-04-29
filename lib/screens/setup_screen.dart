@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
+import '../models/savings_goal_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/quest_branding.dart';
@@ -57,6 +58,13 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
         final spendingBudget = double.parse(_budgetController.text.trim());
         // Simple distribution for SPENDING only (Prompt 10)
         // Savings is now handled separately by the Savings Goal.
+        final initialGoal = SavingsGoalModel(
+          id: 'initial-goal',
+          name: _goalNameController.text.trim(),
+          target: double.parse(_goalAmountController.text.trim()),
+          baseAmount: 0.0,
+        );
+
         final newUser = UserModel(
           uid: authUser.uid,
           email: authUser.email ?? '',
@@ -70,6 +78,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
           },
           savingsGoalTarget: double.parse(_goalAmountController.text.trim()),
           savingsGoalName: _goalNameController.text.trim(),
+          savingsGoals: [initialGoal],
         );
         
         await ref.read(userServiceProvider).saveUser(newUser);

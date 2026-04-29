@@ -10,7 +10,9 @@ import 'user_service.dart';
 class AuthService {
   // Use the default [FirebaseAuth] singleton instance.
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: 'YOUR_WEB_CLIENT_ID', // Replace this with your actual Web Client ID from Firebase
+  );
   final UserService _userService = UserService();
 
   /// Exposes the current authentication state as a [Stream].

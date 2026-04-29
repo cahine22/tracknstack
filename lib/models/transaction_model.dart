@@ -32,6 +32,7 @@ class TransactionModel {
   final TransactionCategory category;
   final DateTime date;
   final String? note;
+  final String? savingsGoalId;
 
   TransactionModel({
     this.id,
@@ -40,6 +41,7 @@ class TransactionModel {
     required this.category,
     required this.date,
     this.note,
+    this.savingsGoalId,
   });
 
   factory TransactionModel.fromMap(Map<String, dynamic> data, String id) {
@@ -59,6 +61,7 @@ class TransactionModel {
       category: TransactionCategory.fromString(data['category'] ?? 'others'),
       date: dateValue,
       note: data['note'],
+      savingsGoalId: data['savingsGoalId'],
     );
   }
 
@@ -69,6 +72,7 @@ class TransactionModel {
       'category': category.name,
       'date': Timestamp.fromDate(date),
       'note': note,
+      'savingsGoalId': savingsGoalId,
     };
   }
 }

@@ -6,9 +6,10 @@ import '../providers/transaction_provider.dart';
 import '../widgets/savings_progress_bar.dart';
 import '../widgets/quick_log_widget.dart';
 import '../widgets/summary_section.dart';
-import '../widgets/character_avatar.dart';
-import '../widgets/quest_text_field.dart';
-import '../widgets/quest_button.dart';
+import '../widgets/dashboard_header.dart';
+import '../widgets/savings_goal_dialogs.dart';
+import '../widgets/daily_quest_widget.dart';
+import '../models/savings_goal_model.dart';
 
 import 'setup_screen.dart';
 
@@ -22,17 +23,21 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _isShowingGoalDialog = false;
 
-  void _checkGoalCompletion(double totalSavings) {
+  void _checkGoalCompletion(Map<String, double> savingsByGoal) {
     final userData = ref.read(userDataProvider).value;
-    if (userData == null || userData.savingsGoalTarget == 0) return;
+    if (userData == null || userData.savingsGoals.isEmpty) return;
 
-    final currentGoalSavings = totalSavings - userData.savingsGoalBase;
-    if (currentGoalSavings >= userData.savingsGoalTarget && !_isShowingGoalDialog) {
-      _showGoalReachedDialog(userData.uid, totalSavings);
+    for (final goal in userData.savingsGoals) {
+      if (goal.isCompleted) continue;
+      
+      final currentGoalSavings = savingsByGoal[goal.id] ?? 0.0;
+      if (currentGoalSavings >= goal.target && !_isShowingGoalDialog) {
+        _showGoalReachedDialog(userData.uid, goal);
+      }
     }
   }
 
-  void _showGoalReachedDialog(String uid, double totalSavings) {
+  void _showGoalReachedDialog(String uid, SavingsGoalModel goal) {
     setState(() => _isShowingGoalDialog = true);
     
     // Award bonus XP for reaching the goal (Task 17)
@@ -41,9 +46,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => _GoalCompletionDialog(
+      builder: (context) => GoalCompletionDialog(
         uid: uid,
-        currentTotalSavings: totalSavings,
+        goal: goal,
         onGoalSet: () {
           setState(() => _isShowingGoalDialog = false);
         },
@@ -51,10 +56,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
+  void _showAddNewGoalDialog(String uid) {
+    showDialog(
+      context: context,
+      builder: (context) => AddNewGoalDialog(uid: uid),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Watch total savings to trigger goal completion logic
-    ref.listen(totalSavingsProvider, (previous, next) {
+    // Watch savingsByGoal to trigger goal completion logic
+    ref.listen(savingsByGoalProvider, (previous, next) {
       _checkGoalCompletion(next);
     });
 
@@ -85,37 +97,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Character Profile Section
+                DashboardHeader(user: user),
+                const SizedBox(height: 32),
+
+                // Savings Progress Bar Header
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CharacterAvatar(user: user),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user.displayName,
-                            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Financial Hero',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ],
+                    Text(
+                      'ACTIVE QUESTS',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        letterSpacing: 2.0,
+                        color: Theme.of(context).primaryColor,
                       ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => _showAddNewGoalDialog(user.uid),
+                      icon: const Icon(Icons.add, size: 20),
+                      label: const Text('New Quest'),
                     ),
                   ],
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 12),
 
                 // Savings Progress Bar
                 const SavingsProgressBar(),
@@ -123,6 +126,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
                 // Quick Log Widget
                 const QuickLogWidget(),
+                const SizedBox(height: 32),
+
+                // Daily Quests
+                DailyQuestWidget(user: user),
                 const SizedBox(height: 32),
 
                 // Summary Cards
@@ -144,122 +151,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _GoalCompletionDialog extends StatefulWidget {
-  final String uid;
-  final double currentTotalSavings;
-  final VoidCallback onGoalSet;
-
-  const _GoalCompletionDialog({
-    required this.uid,
-    required this.currentTotalSavings,
-    required this.onGoalSet,
-  });
-
-  @override
-  State<_GoalCompletionDialog> createState() => _GoalCompletionDialogState();
-}
-
-class _GoalCompletionDialogState extends State<_GoalCompletionDialog> {
-  final _nameController = TextEditingController();
-  final _amountController = TextEditingController();
-  bool _isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
-
-    return AlertDialog(
-      backgroundColor: const Color(0xFF3E2723), // Dark brown theme
-      title: Column(
-        children: [
-          const Icon(Icons.workspace_premium, size: 64, color: Colors.amber),
-          const SizedBox(height: 16),
-          Text(
-            'GOAL REACHED!',
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              color: primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'You have mastered this quest and earned 500 bonus XP! Your legend grows.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'What is your next great challenge?',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-            const SizedBox(height: 16),
-            QuestTextField(
-              controller: _nameController,
-              labelText: 'New Goal Name',
-              prefixIcon: Icons.flag_outlined,
-            ),
-            const SizedBox(height: 16),
-            QuestTextField(
-              controller: _amountController,
-              labelText: 'Target Amount (\$)',
-              prefixIcon: Icons.savings_outlined,
-              keyboardType: TextInputType.number,
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        Consumer(
-          builder: (context, ref, child) {
-            return QuestButton(
-              label: 'Set New Goal',
-              isLoading: _isLoading,
-              onPressed: () async {
-                final name = _nameController.text.trim();
-                final amount = double.tryParse(_amountController.text.trim());
-                
-                if (name.isEmpty || amount == null || amount <= 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please define your next quest.')),
-                  );
-                  return;
-                }
-
-                setState(() => _isLoading = true);
-                try {
-                  await ref.read(userServiceProvider).startNewSavingsGoal(
-                    widget.uid,
-                    name,
-                    amount,
-                    widget.currentTotalSavings,
-                  );
-                  if (mounted) {
-                    Navigator.of(context).pop();
-                    widget.onGoalSet();
-                  }
-                } catch (e) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to set new goal: $e')),
-                    );
-                  }
-                } finally {
-                  if (mounted) setState(() => _isLoading = false);
-                }
-              },
-            );
-          },
-        ),
-      ],
     );
   }
 }

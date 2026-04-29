@@ -12,7 +12,12 @@
           "package_name": "com.example.tracknstack"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "650242887825-ppej0kr45lf9iqpbqfqvc0bvdi2tapko.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCV-m5o8UVkM3fjPBzmt0lFBRHkl06XCNU"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650242887825-ppej0kr45lf9iqpbqfqvc0bvdi2tapko.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "650242887825-5hf44v7qunlug56i9kl69220do389ao3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tracknstack"
+              }
+            }
+          ]
         }
       }
     }

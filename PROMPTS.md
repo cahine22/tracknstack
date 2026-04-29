@@ -34,8 +34,21 @@ calculation, and get rid of the text on the summary cards of the sub goals
 
 [x] 15. As per requirement 4 (The Character Avatar), get rid of the redundant "Welcome," message on the DashboardScreen as it is now replaced by the avatar widget.
 
-[x] 16. As per requirement 1 (Multi-Provider Auth), set up the Google Sign-In integration in the AuthService and LoginScreen.
+[x] 16. As per requirement 1 (Multi-Provider Auth), set up the Google Sign-In integration in the AuthService and LoginScreen. (Note: Requires Firebase Console configuration: SHA-1 for Android and GoogleService-Info.plist for iOS).
 
 [x] 17. As per requirement 3 (Savings Progress Bar) and 10 (Leveling Logic), structure the savings goal so that if the user reaches the goal and saves the desired amount, they both earn bonus XP and are prompted to create a new savings goal to work towards.
 
+[x] 18. be able to add a savings goal additionally to the initial savings goal the user specified when the user signed up. And then when a user logs a savings transaction, make them specify what savings goal the savings transaction is going twords
 
+[x] 19. integrate google authentication using firebase. create the fingerprint needed for the android integration. 
+
+[x] 20. rearchetct the dashboard file so that it isnt so long, making use of creating widgets
+
+[x] 21. Implement the Daily Quests system as per Requirement #7. This includes:
+    - Updating the UserModel to track daily quest progress and reset dates.
+    - Implementing logic in UserService to handle quest completion and XP rewards (+20 XP).
+    - Creating a new DailyQuestWidget to display "Daily Bounties" on the Dashboard.
+    - Ensuring quests reset automatically every day based on the user's local date.
+
+[ ] 21. help me identify the cause of google authentication not working, giving me this error every time: Access blocked: Authorization Error
+The OAuth client was not found. If you are a developer of this app, see error details. Error 401: invalid_client

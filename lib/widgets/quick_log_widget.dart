@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/transaction_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/transaction_provider.dart';
+import '../providers/user_provider.dart';
 import 'quest_button.dart';
 import 'quest_text_field.dart';
 
@@ -17,6 +18,7 @@ class _QuickLogWidgetState extends ConsumerState<QuickLogWidget> {
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
   TransactionCategory _selectedCategory = TransactionCategory.needs;
+  String? _selectedSavingsGoalId;
   bool _isSaving = false;
 
   @override
@@ -35,6 +37,13 @@ class _QuickLogWidgetState extends ConsumerState<QuickLogWidget> {
       return;
     }
 
+    if (_selectedCategory == TransactionCategory.savings && _selectedSavingsGoalId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a savings goal.')),
+      );
+      return;
+    }
+
     setState(() => _isSaving = true);
     try {
       final user = ref.read(authStateProvider).value;
@@ -45,6 +54,7 @@ class _QuickLogWidgetState extends ConsumerState<QuickLogWidget> {
           category: _selectedCategory,
           date: DateTime.now(),
           note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
+          savingsGoalId: _selectedCategory == TransactionCategory.savings ? _selectedSavingsGoalId : null,
         );
         await ref.read(transactionServiceProvider).addTransaction(transaction);
         
@@ -69,6 +79,9 @@ class _QuickLogWidgetState extends ConsumerState<QuickLogWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final userData = ref.watch(userDataProvider).value;
+    final activeGoals = userData?.savingsGoals.where((g) => !g.isCompleted).toList() ?? [];
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -100,9 +113,37 @@ class _QuickLogWidgetState extends ConsumerState<QuickLogWidget> {
                 );
               }).toList(),
               onChanged: (val) {
-                if (val != null) setState(() => _selectedCategory = val);
+                if (val != null) {
+                  setState(() {
+                    _selectedCategory = val;
+                    if (_selectedCategory == TransactionCategory.savings && activeGoals.isNotEmpty) {
+                      _selectedSavingsGoalId = activeGoals.first.id;
+                    } else {
+                      _selectedSavingsGoalId = null;
+                    }
+                  });
+                }
               },
             ),
+            if (_selectedCategory == TransactionCategory.savings && activeGoals.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                initialValue: _selectedSavingsGoalId,
+                decoration: const InputDecoration(
+                  labelText: 'Target Savings Goal',
+                  prefixIcon: Icon(Icons.flag_outlined),
+                ),
+                items: activeGoals.map((goal) {
+                  return DropdownMenuItem(
+                    value: goal.id,
+                    child: Text(goal.name),
+                  );
+                }).toList(),
+                onChanged: (val) {
+                  setState(() => _selectedSavingsGoalId = val);
+                },
+              ),
+            ],
             const SizedBox(height: 20),
             QuestButton(
               label: 'Log Transaction',

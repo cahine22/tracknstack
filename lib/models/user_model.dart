@@ -1,3 +1,5 @@
+import 'savings_goal_model.dart';
+
 /// A data model for our user profile in Firestore.
 /// 
 /// Following our 'Clean Code' principles, this class separates 
@@ -10,10 +12,13 @@ class UserModel {
   final int points;
   final double monthlyBudget;
   final Map<String, double> categoryBudgets;
-  final double savingsGoalTarget;
-  final String savingsGoalName;
-  final double savingsGoalBase;
+  final double savingsGoalTarget; // Legacy: Keeping for backward compatibility
+  final String savingsGoalName; // Legacy: Keeping for backward compatibility
+  final double savingsGoalBase; // Legacy: Keeping for backward compatibility
   final int completedGoalsCount;
+  final List<SavingsGoalModel> savingsGoals;
+  final String lastQuestResetDate; // YYYY-MM-DD
+  final List<String> completedQuests;
 
   UserModel({
     required this.uid,
@@ -32,11 +37,31 @@ class UserModel {
     this.savingsGoalName = 'Main Quest',
     this.savingsGoalBase = 0.0,
     this.completedGoalsCount = 0,
+    this.savingsGoals = const [],
+    this.lastQuestResetDate = '',
+    this.completedQuests = const [],
   });
 
   /// Factory constructor to create a [UserModel] from a Map.
   /// Used when retrieving data from Firestore.
   factory UserModel.fromMap(Map<String, dynamic> data, String documentId) {
+    List<SavingsGoalModel> goals = (data['savingsGoals'] as List<dynamic>?)
+        ?.map((g) {
+          final goalData = g as Map<String, dynamic>;
+          return SavingsGoalModel.fromMap(goalData, goalData['id'] ?? '');
+        })
+        .toList() ?? [];
+
+    // Legacy Migration: If there are no goals but there are legacy goal fields, add them.
+    if (goals.isEmpty && (data['savingsGoalTarget'] ?? 0) > 0) {
+      goals.add(SavingsGoalModel(
+        id: 'legacy-primary',
+        name: data['savingsGoalName'] ?? 'Main Quest',
+        target: (data['savingsGoalTarget'] ?? 0.0).toDouble(),
+        baseAmount: (data['savingsGoalBase'] ?? 0.0).toDouble(),
+      ));
+    }
+
     return UserModel(
       uid: documentId,
       email: data['email'] ?? '',
@@ -56,6 +81,9 @@ class UserModel {
       savingsGoalName: data['savingsGoalName'] ?? 'Main Quest',
       savingsGoalBase: (data['savingsGoalBase'] ?? 0.0).toDouble(),
       completedGoalsCount: data['completedGoalsCount'] ?? 0,
+      savingsGoals: goals,
+      lastQuestResetDate: data['lastQuestResetDate'] ?? '',
+      completedQuests: List<String>.from(data['completedQuests'] ?? []),
     );
   }
 
@@ -73,6 +101,9 @@ class UserModel {
       'savingsGoalName': savingsGoalName,
       'savingsGoalBase': savingsGoalBase,
       'completedGoalsCount': completedGoalsCount,
+      'savingsGoals': savingsGoals.map((g) => g.toMap()).toList(),
+      'lastQuestResetDate': lastQuestResetDate,
+      'completedQuests': completedQuests,
     };
   }
 

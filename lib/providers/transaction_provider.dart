@@ -39,3 +39,16 @@ final categoryTotalsProvider = Provider<Map<TransactionCategory, double>>((ref) 
   }
   return totals;
 });
+
+/// A [Provider] that calculates total savings per goal ID.
+final savingsByGoalProvider = Provider<Map<String, double>>((ref) {
+  final transactions = ref.watch(transactionsProvider).value ?? [];
+  final map = <String, double>{};
+
+  for (final t in transactions) {
+    if (t.category == TransactionCategory.savings && t.savingsGoalId != null) {
+      map[t.savingsGoalId!] = (map[t.savingsGoalId!] ?? 0.0) + t.amount;
+    }
+  }
+  return map;
+});
