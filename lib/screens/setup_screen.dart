@@ -86,11 +86,10 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
         // and [DashboardScreen] will show the normal dashboard.
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to initialize your quest: $e')),
-        );
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to initialize your quest: $e')),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

@@ -53,19 +53,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         _passwordController.text.trim(),
       );
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              e.toString(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-        );
-      }
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -74,6 +73,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
+    final theme = Theme.of(context);
 
     return Scaffold(
       body: SafeArea(
@@ -129,19 +129,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   try {
                     await ref.read(authServiceProvider).signInWithGoogle();
                   } catch (e) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            e.toString(),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          backgroundColor: Theme.of(context).colorScheme.error,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          e.toString(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      );
-                    }
+                        backgroundColor: theme.colorScheme.error,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    );
                   } finally {
                     if (mounted) setState(() => _isLoading = false);
                   }

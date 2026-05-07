@@ -54,23 +54,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         _nameController.text.trim(),
       );
 
-      if (mounted) {
-        Navigator.pop(context);
-      }
+      if (!mounted) return;
+      Navigator.pop(context);
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              e.toString(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-        );
-      }
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

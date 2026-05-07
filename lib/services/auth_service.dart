@@ -11,7 +11,7 @@ class AuthService {
   // Use the default [FirebaseAuth] singleton instance.
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: 'YOUR_WEB_CLIENT_ID', // Replace this with your actual Web Client ID from Firebase
+    clientId: '650242887825-ppej0kr45lf9iqpbqfqvc0bvdi2tapko.apps.googleusercontent.com',
   );
   final UserService _userService = UserService();
 

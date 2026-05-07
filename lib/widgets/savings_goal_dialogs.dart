@@ -113,16 +113,14 @@ class _GoalCompletionDialogState extends State<GoalCompletionDialog> {
                     completedGoalId: widget.goal.id,
                   );
                   
-                  if (mounted) {
-                    navigator.pop();
-                    widget.onGoalSet();
-                  }
+                  if (!mounted) return;
+                  navigator.pop();
+                  widget.onGoalSet();
                 } catch (e) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to set new goal: $e')),
-                    );
-                  }
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to set new goal: $e')),
+                  );
                 } finally {
                   if (mounted) setState(() => _isLoading = false);
                 }
@@ -205,13 +203,13 @@ class _AddNewGoalDialogState extends State<AddNewGoalDialog> {
                   );
                   final navigator = Navigator.of(context);
                   await ref.read(userServiceProvider).addSavingsGoal(widget.uid, goal);
-                  if (mounted) navigator.pop();
+                  if (!mounted) return;
+                  navigator.pop();
                 } catch (e) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to add goal: $e')),
-                    );
-                  }
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to add goal: $e')),
+                  );
                 } finally {
                   if (mounted) setState(() => _isLoading = false);
                 }

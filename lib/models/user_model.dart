@@ -19,6 +19,10 @@ class UserModel {
   final List<SavingsGoalModel> savingsGoals;
   final String lastQuestResetDate; // YYYY-MM-DD
   final List<String> completedQuests;
+  final List<String> activeWeeklyChallenges; // IDs of the 2 challenges for the week
+  final List<String> acceptedWeeklyChallenges; // IDs of challenges the user opted into
+  final List<String> completedWeeklyChallenges; // IDs of challenges completed this week
+  final String lastWeeklyResetDate; // YYYY-MM-DD (typically a Monday)
 
   UserModel({
     required this.uid,
@@ -40,6 +44,10 @@ class UserModel {
     this.savingsGoals = const [],
     this.lastQuestResetDate = '',
     this.completedQuests = const [],
+    this.activeWeeklyChallenges = const [],
+    this.acceptedWeeklyChallenges = const [],
+    this.completedWeeklyChallenges = const [],
+    this.lastWeeklyResetDate = '',
   });
 
   /// Factory constructor to create a [UserModel] from a Map.
@@ -84,6 +92,10 @@ class UserModel {
       savingsGoals: goals,
       lastQuestResetDate: data['lastQuestResetDate'] ?? '',
       completedQuests: List<String>.from(data['completedQuests'] ?? []),
+      activeWeeklyChallenges: List<String>.from(data['activeWeeklyChallenges'] ?? []),
+      acceptedWeeklyChallenges: List<String>.from(data['acceptedWeeklyChallenges'] ?? []),
+      completedWeeklyChallenges: List<String>.from(data['completedWeeklyChallenges'] ?? []),
+      lastWeeklyResetDate: data['lastWeeklyResetDate'] ?? '',
     );
   }
 
@@ -104,6 +116,10 @@ class UserModel {
       'savingsGoals': savingsGoals.map((g) => g.toMap()).toList(),
       'lastQuestResetDate': lastQuestResetDate,
       'completedQuests': completedQuests,
+      'activeWeeklyChallenges': activeWeeklyChallenges,
+      'acceptedWeeklyChallenges': acceptedWeeklyChallenges,
+      'completedWeeklyChallenges': completedWeeklyChallenges,
+      'lastWeeklyResetDate': lastWeeklyResetDate,
     };
   }
 

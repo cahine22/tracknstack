@@ -9,6 +9,7 @@ import '../widgets/summary_section.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/savings_goal_dialogs.dart';
 import '../widgets/daily_quest_widget.dart';
+import '../widgets/weekly_challenge_widget.dart';
 import '../models/savings_goal_model.dart';
 
 import 'setup_screen.dart';
@@ -130,6 +131,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
                 // Daily Quests
                 DailyQuestWidget(user: user),
+                const SizedBox(height: 32),
+
+                // Weekly Challenges
+                WeeklyChallengeWidget(user: user),
                 const SizedBox(height: 32),
 
                 // Summary Cards

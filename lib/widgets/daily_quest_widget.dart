@@ -12,6 +12,7 @@ class DailyQuestWidget extends ConsumerWidget {
     final today = DateTime.now().toIso8601String().split('T')[0];
     final isResetNeeded = user.lastQuestResetDate != today;
     final completedQuests = isResetNeeded ? <String>[] : user.completedQuests;
+    final isLogCompleted = completedQuests.contains('daily_log');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,8 +29,8 @@ class DailyQuestWidget extends ConsumerWidget {
           id: 'daily_log',
           title: "Log today's spending",
           reward: '+20 XP',
-          isCompleted: completedQuests.contains('daily_log'),
-          description: isCompleted 
+          isCompleted: isLogCompleted,
+          description: isLogCompleted 
             ? "Bounty collected! Check back tomorrow." 
             : "Complete a 'Quick Log' to earn this reward.",
         ),
@@ -73,7 +74,7 @@ class _QuestItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isCompleted ? theme.primaryColor.withValues(alpha: 0.1) : Colors.white05,
+              color: isCompleted ? theme.primaryColor.withValues(alpha: 0.1) : Colors.white,
               shape: BoxShape.circle,
             ),
             child: Icon(

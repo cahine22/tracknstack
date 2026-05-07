@@ -50,5 +50,11 @@ calculation, and get rid of the text on the summary cards of the sub goals
     - Creating a new DailyQuestWidget to display "Daily Bounties" on the Dashboard.
     - Ensuring quests reset automatically every day based on the user's local date.
 
-[ ] 21. help me identify the cause of google authentication not working, giving me this error every time: Access blocked: Authorization Error
+[x] 22. Implement the Weekly "Boss" Challenges as per Requirement #8. This includes:
+    - Creating ChallengeModel with a pool of 10 randomizable tasks.
+    - Adding weekly tracking to UserModel (active, accepted, completed, reset date).
+    - Implementing UserService logic to pick 2 random challenges every Monday.
+    - Creating WeeklyChallengeWidget for the Dashboard to allow users to opt-in and claim rewards.
+
+[x] 23. help me identify the cause of google authentication not working, giving me this error every time: Access blocked: Authorization Error
 The OAuth client was not found. If you are a developer of this app, see error details. Error 401: invalid_client
