@@ -45,7 +45,37 @@ class UserService {
     }
   }
 
-  /// Complete a daily quest and award XP.
+  /// Update the user's streak and return the XP multiplier.
+  Future<double> updateStreakAndGetMultiplier(String uid) async {
+    final now = DateTime.now();
+    final today = now.toIso8601String().split('T')[0];
+    final yesterday = now.subtract(const Duration(days: 1)).toIso8601String().split('T')[0];
+
+    final doc = await _usersRef.doc(uid).get();
+    if (!doc.exists || doc.data() == null) return 1.0;
+
+    final data = doc.data() as Map<String, dynamic>;
+    final lastLogDate = data['lastLogDate'] ?? '';
+    int currentStreak = data['streakCount'] ?? 0;
+
+    if (lastLogDate == today) {
+      // Already logged today, keep current multiplier
+    } else if (lastLogDate == yesterday) {
+      currentStreak++;
+    } else {
+      currentStreak = 1;
+    }
+
+    await _usersRef.doc(uid).update({
+      'streakCount': currentStreak,
+      'lastLogDate': today,
+    });
+
+    // Multiplier logic: 1.0 + (streak * 0.1), capped at 2.0
+    return math.min(2.0, 1.0 + (currentStreak * 0.1));
+  }
+
+  /// Complete a daily quest and award XP with streak multiplier.
   Future<void> completeQuest(String uid, String questId, int xpReward) async {
     final today = DateTime.now().toIso8601String().split('T')[0];
     final doc = await _usersRef.doc(uid).get();
@@ -55,17 +85,19 @@ class UserService {
       final lastReset = data['lastQuestResetDate'] ?? '';
       List<String> completed = List<String>.from(data['completedQuests'] ?? []);
 
-      // Reset if it's a new day
       if (lastReset != today) {
         completed = [questId];
       } else if (!completed.contains(questId)) {
         completed.add(questId);
       } else {
-        return; // Already completed today
+        return; 
       }
 
+      final multiplier = await updateStreakAndGetMultiplier(uid);
+      final finalXP = (xpReward * multiplier).round();
+
       await _usersRef.doc(uid).update({
-        'points': FieldValue.increment(xpReward),
+        'points': FieldValue.increment(finalXP),
         'completedQuests': completed,
         'lastQuestResetDate': today,
       });

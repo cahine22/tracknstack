@@ -28,7 +28,7 @@ class WeeklyChallengeWidget extends ConsumerWidget {
         Row(
           children: [
             Text(
-              'WEEKLY BOSSES',
+              'WEEKLY CHALLENGES',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     letterSpacing: 2.0,
                     color: Colors.orangeAccent,

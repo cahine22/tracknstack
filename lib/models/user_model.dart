@@ -23,6 +23,8 @@ class UserModel {
   final List<String> acceptedWeeklyChallenges; // IDs of challenges the user opted into
   final List<String> completedWeeklyChallenges; // IDs of challenges completed this week
   final String lastWeeklyResetDate; // YYYY-MM-DD (typically a Monday)
+  final int streakCount;
+  final String lastLogDate; // YYYY-MM-DD
 
   UserModel({
     required this.uid,
@@ -48,6 +50,8 @@ class UserModel {
     this.acceptedWeeklyChallenges = const [],
     this.completedWeeklyChallenges = const [],
     this.lastWeeklyResetDate = '',
+    this.streakCount = 0,
+    this.lastLogDate = '',
   });
 
   /// Factory constructor to create a [UserModel] from a Map.
@@ -96,6 +100,8 @@ class UserModel {
       acceptedWeeklyChallenges: List<String>.from(data['acceptedWeeklyChallenges'] ?? []),
       completedWeeklyChallenges: List<String>.from(data['completedWeeklyChallenges'] ?? []),
       lastWeeklyResetDate: data['lastWeeklyResetDate'] ?? '',
+      streakCount: data['streakCount'] ?? 0,
+      lastLogDate: data['lastLogDate'] ?? '',
     );
   }
 
@@ -120,6 +126,8 @@ class UserModel {
       'acceptedWeeklyChallenges': acceptedWeeklyChallenges,
       'completedWeeklyChallenges': completedWeeklyChallenges,
       'lastWeeklyResetDate': lastWeeklyResetDate,
+      'streakCount': streakCount,
+      'lastLogDate': lastLogDate,
     };
   }
 

@@ -58,3 +58,7 @@ calculation, and get rid of the text on the summary cards of the sub goals
 
 [x] 23. help me identify the cause of google authentication not working, giving me this error every time: Access blocked: Authorization Error
 The OAuth client was not found. If you are a developer of this app, see error details. Error 401: invalid_client
+
+[x] 24. Implement the Streak Multiplier logic as per Requirement #9. Update the UserModel and UserService to track consecutive days of activity and apply an XP multiplier (e.g., +10% per day, capped at 2.0x) to all quest and transaction rewards to encourage daily engagement.
+
+[x] 25. Enhance the Progression & Reward Framework as per Requirement #11 (Unlockables). Update the CharacterAvatar widget to progressively unlock new, more complex hero icons (e.g., Shield, Staff, Crown) as the user reaches higher level thresholds (LVL 3, 6, 10, etc.), providing a visual sense of growth.

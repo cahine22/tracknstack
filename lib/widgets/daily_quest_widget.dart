@@ -18,7 +18,7 @@ class DailyQuestWidget extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'DAILY BOUNTIES',
+          'DAILY CHALLENGE',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
             letterSpacing: 2.0,
             color: Theme.of(context).primaryColor,
